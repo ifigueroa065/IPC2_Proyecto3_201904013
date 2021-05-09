@@ -39,22 +39,17 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
       <div class="container">
-      <a class="navbar-brand" href="REGISTRO.html">FACULTAD DE INGENERÍA</a>
+      <a class="navbar-brand" href="">FACULTAD DE INGENERÍA</a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          Menu
+          M
           <i class="fas fa-bars"></i>
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-              <a class="nav-link" href="REGISTRO.html">INICIO</a>
+              <a class="nav-link" href="">INICIO</a>
           </li>
-          <li class="nav-item">
-              <a class="nav-link" href="OPERACIONES.html">AYUDA</a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" href="ERRORES.html">PETICIONES</a>
-          </li>
+          
           
           </ul>
       </div>
@@ -81,47 +76,55 @@
       <!-- Main Content -->
       <div class="container">
       <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
+      <div >
           <div class="post-preview">
-          <a >
+          <a >  
+            <center>
               <h2 class="post-title">
-              SERVER
-              </h2>
-              <h3 class="post-subtitle">
+                CARGAR ARCHIVO
+                </h2>
+                <h3 class="post-subtitle">
+                
+                </h3>
+            </center>
               
-              </h3>
           </a>
           <br>
           <form>
             <div class="row">
-              <div class="col">
-                <label for="exampleFormControlFile1">Example file input</label>
-              <input type="file" class="form-control-file" id="exampleFormControlFile1">
-              </div>
-              <div class="col">
-                <button type="button" class="btn btn-success">Success</button>
+              <div>
+                <input class="form-control form-control-lg" id="file-input" type="file">
               </div>
             </div>
           </form>
-  
             <br>
           
           </div>
-            
-      
+        
                   <hr>
-                  <form>
+                  <div style="text-align: right;">
+                    <button type="button" class="btn btn-outline-dark" onclick="consultar()">CONSULTAR DATOS</button>
+                    <button type="button" class="btn btn-outline-dark">FILTRAR</button>
+                    <button type="button" class="btn btn-outline-dark">FILTRO 2</button>
+                  </div>
+                  <br>
+                  <div style="text-align: center;">
+                    <button type="button" class="btn btn-outline-success" onclick="enviar()" >ENVIAR</button>
+                    <button type="button" class="btn btn-outline-danger" >RESET</button>
+                  </div>
+                  <hr>
+                  <form id="post-form1">
                     <div class="form-row">
                       <div class="col">
                         <div class="form-group">
                           <label for="exampleFormControlTextarea1">ENTRADA</label>
-                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                          <textarea class="form-control" id="entrada" rows="20" readonly="readonly"></textarea>
                         </div>
                       </div>
                       <div class="col">
                         <div class="form-group">
                           <label for="exampleFormControlTextarea1">SALIDA</label>
-                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                          <textarea class="form-control" id="salida" rows="20" readonly="readonly"></textarea>
                         </div>
                       </div>
                     </div>
@@ -175,38 +178,61 @@
 
           <!-- Custom scripts for this template -->
           <script src="{%  static 'js/clean-blog.min.js' %}"></script>
+          
+          
 
-    <!--PLANTILLA-->
-    <h1>Hola mundo</h1>
-    <form id="post-form">
-      <input type="text" name="api-info" id="api-info" />
-      <input type="submit" value="Enviar datos" />
-    </form>
-    <button id="get-button">Recibir información</button>
-    <div id="messages"></div>
+
+    <!--LECTURA DE ARCHIVO-->
     <script>
-      let post_form = document.getElementById("post-form");
-      let get_button = document.getElementById("get-button");
-      let messages = document.getElementById("messages");
+      function leerArchivo(e) {
+        var archivo = e.target.files[0];
+        if (!archivo) {
+          return;
+        }
+        var lector = new FileReader();
+        lector.onload = function(e) {
+          var contenido = e.target.result;
+          mostrarContenido(contenido);
+        };
+        lector.readAsText(archivo);
+      }
 
-      post_form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        fetch("http://localhost:5000/events/", {
+      function mostrarContenido(contenido) {
+
+        var ent=document.getElementById('entrada');
+        ent.innerHTML=contenido;
+        
+      }
+
+      document.getElementById('file-input')
+        .addEventListener('change', leerArchivo, false);
+    </script>      
+
+
+    <script>
+      function enviar(){
+        let cargado = document.querySelector("#entrada").value;
+        let messages = document.getElementById("messages");
+
+        fetch("http://localhost:5000/archivo/", {
           method: "POST",
           headers: {
             "Content-Type": "text/plain",
           },
-          body: post_form.elements["api-info"].value,
+          body: cargado,
         }).then((res) => {
           if (res.ok) {
-            messages.innerText = "OK";
+            alert("SE ENVIÓ CORRECTAMENTE")
           }
         });
-      });
+        
+      }
 
-      get_button.addEventListener("click", (e) => {
-        e.preventDefault();
-        fetch("http://localhost:5000/events/", {
+      function consultar(){
+        let cargado = document.querySelector("#salida");
+        let messages = document.getElementById("messages");
+        
+        fetch("http://localhost:5000/archivo/", {
           method: "GET",
           headers: {
             "Content-Type": "text/plain",
@@ -218,9 +244,12 @@
             }
           })
           .then((res_txt) => {
-            messages.innerText = res_txt;
+            cargado.innerHTML = res_txt;
+            console.log("POST-Consulta de Análisis")
           });
-      });
+      
+
+      }
     </script>
   </body>
 </html>

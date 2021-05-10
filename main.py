@@ -171,7 +171,19 @@ def analizando():
             x+=1
         print("REPORTADO validadas")
         print(val_users)
-        print(contador2)
+        print(contador2) #MESIRVE
+
+        repo=[]
+        x=0
+        while x<len(validada):
+            temp=[]
+            for i in REPORTE:
+                if i.fecha==validada[x]:
+                    temp.append(i.reportado)
+            repo.append(temp)       
+            x+=1
+        print("------REPORTADOS POR FECHA")
+        print(repo)#MESIRVE
 
         #-------------------VERIFICANDO AFECTADOS-------------------
         afectados=[]
@@ -224,42 +236,37 @@ def analizando():
             print("     **************************      ")
     data=ET.Element('ESTADISTICAS')
     items=ET.SubElement(data,'ESTADISTICA')
-
-    
-    
-    item7=ET.SubElement(items,'AFECTADOS')
-    item8=ET.SubElement(items,'ERRORES')
-
     x=0
     while x<len(validada):
         item1=ET.SubElement(items,'FECHA')
         item2=ET.SubElement(items,'CANTIDAD_MENSAJES')
         item1.text=str(validada[x])
         item2.text=str(contador1[x])
+        item3=ET.SubElement(items,'REPORTADO_POR')
+        xx=0
+        while xx<len(validada):
+            for i in repo[xx]:
+                item4=ET.SubElement(item3,'USUARIO')
+                item5=ET.SubElement(item4,'EMAIL')
+                item6=ET.SubElement(item4,'CANTIDAD_MENSAJES')
+                item5.text=str(i)
+                item6.text=str(contador2[xx])
+            xx+=1
+        item7=ET.SubElement(items,'AFECTADOS')
+        for k in afectados[x]:
+            item9=ET.SubElement(item7,'AFECTADO')
+            item9.text=k  
+        item8=ET.SubElement(items,'ERRORES')
+        zy=0
+        while zy<len(val_errores):
+            item10=ET.SubElement(item8,'ERROR')
+            item11=ET.SubElement(item10,'CODIGO')
+            item12=ET.SubElement(item10,'CANTIDAD_MENSAJES')
+
+            item11.text=str(val_errores[zy])
+            item12.text=str(contador3[zy]) 
+            zy+=1    
         x+=1
-    
-    item3=ET.SubElement(items,'REPORTADO_POR')
-    xx=0
-    while xx<len(val_users):
-        
-        item4=ET.SubElement(item3,'USUARIO')
-        item5=ET.SubElement(item4,'EMAIL')
-        item6=ET.SubElement(item4,'CANTIDAD_MENSAJES')
-        item5.text=str(val_users[xx])
-        item6.text=str(contador2[xx])
-        xx+=1
-
-
-    item9=ET.SubElement(item7,'AFECTADO')
-    item9.text='xx@ing.usac.edu.gt'
-
-    item10=ET.SubElement(item8,'ERROR')
-    item11=ET.SubElement(item10,'CODIGO')
-    item12=ET.SubElement(item10,'CANTIDAD_MENSAJES')
-
-    item11.text='2001'
-    item12.text='12'
-
 
     mydata=ET.tostring(data)
     ruta="estadística.xml"
@@ -281,11 +288,19 @@ def analizando():
 #GENERANDO ARCHIVO
 @app.route('/archivo/', methods=['GET'])
 def mostrando():
-    data = open('entrada.txt', 'r+')
+    data = open('estadística.xml', 'r+')
     return Response(response=data.read(),
                     mimetype='text/plain',
                     content_type='text/plain')  
 
+#RESETEANDO
+@app.route('/reset/', methods=['POST'])
+def RESET():
+    global REPORTE
+    REPORTE=[]
+
+    return ("ok")
+    
 
 if __name__ =='__main__':
     app.run(debug=True,port=5000) 

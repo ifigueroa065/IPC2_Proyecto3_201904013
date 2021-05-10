@@ -139,9 +139,22 @@ try:
                 val_users.append(reportado)
                 contador2.append(cantidad)
         x+=1
-    print("REPORTADO validadas")
+    print("-----REPORTADO validadas")
     print(val_users)
-    print(contador2)
+    print(contador2)#MESIRVE
+
+
+    repo=[]
+    x=0
+    while x<len(validada):
+        temp=[]
+        for i in REPORTE:
+            if i.fecha==validada[x]:
+                temp.append(i.reportado)
+        repo.append(temp)       
+        x+=1
+    print("------REPORTADOS POR FECHA")
+    print(repo)#MESIRVE
 
     #-------------------VERIFICANDO AFECTADOS-------------------
     afectados=[]
@@ -155,6 +168,7 @@ try:
                     temp.append(j)
         afectados.append(temp)       
         x+=1
+    print("------AFECTADOS POR FECHA")  
     print(afectados)
 
     #-----------VERIFICANDO ERRORES REPORTADOS-------------------
@@ -184,7 +198,7 @@ try:
                 val_errores.append(codigo)
                 contador3.append(cantidad)
         x+=1
-    print("ERRORES validadas")
+    print("--------ERRORES validadas")
     print(val_errores)
     print(contador3)
 finally:

@@ -33,7 +33,7 @@
 	</EVENTO>
 	<EVENTO>
 	Guatemala, 16/01/2021
-	Reportado por: user1@ing.edu.gt
+	Reportado por: user1@ing.usac.edu.gt
 	Usuarios afectados: user2@ing.usac.edu.gt, <user3@ing.usac.edu.gt>
 	Error: 10001 - Excepción en pila
 	</EVENTO>

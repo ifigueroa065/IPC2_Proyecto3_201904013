@@ -53,10 +53,11 @@ def analizando():
         
 
         parkur=content.replace("<","").replace("EVENTO","<EVENTO").replace("/<EVENTO","</EVENTO")
-        #print("este es mi parkur")
-        #print(parkur)
+    
 
         print("--------------------probando leer el parkur-------------------")
+        print("este es mi parkur")
+        print(parkur)
         root = ET.fromstring(parkur)
         listado=[]
         for elemento in root:
